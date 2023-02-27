@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifndef __UB_CPU_H__
 #define __UB_CPU_H__
 
@@ -23,10 +25,12 @@ struct
             uint8_t unused:1;
             uint8_t V:1;
             uint8_t N:1;
-        } flags;
+        } flags = {.C = 0, .Z = 0, .I = 0, .D = 0, .B = 1, .unused = 1, .V = 0, .N = 0};
     } P;            // register status
-} CpuRegister;
+} CpuRegister = {.PC = 0, .A = 0, .S = 0, .X = 0, .Y = 0};
 
+
+void cpuInfo();
 
 
 uint8_t readFromRam();
