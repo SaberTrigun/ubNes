@@ -1,40 +1,43 @@
 #include <stdio.h>
 #include "../headers/cpu.h"
 
+
 namespace ub
 {
-#if 0
+u_char code[5] = {0xA9, 0x07, 0xAD, 0x30, 0x10};
+
     // Мы получаем код операции из PC по нему вызываем нужную функцию с нужным режимом адресом
 int cpu()
 {
     int result = 0;
 
-    switch(readFromRam())
+    switch(readMemory())
     {
-        case 0x69:
+        case 0xA9:
             ++CpuRegister.PC;
-            result = adc(immediate(), 2);
+            lda(immediate(), 2);
+            //++CpuRegister.PC;
+            break;
+        case 0xA5:
+            //todo from addrMod
+            break;
+        case 0xB5:
+            //todo from addrMod
+            break;
+        case 0xAD:
             ++CpuRegister.PC;
+            lda(absolute(), 2);
             break;
-        case 0x65:
+        case 0xBD:
             //todo from addrMod
             break;
-        case 0x75:
+        case 0xB9:
             //todo from addrMod
             break;
-        case 0x6D:
+        case 0xA1:
             //todo from addrMod
             break;
-        case 0x7D:
-            //todo from addrMod
-            break;
-        case 0x79:
-            //todo from addrMod
-            break;
-        case 0x61:
-            //todo from addrMod
-            break;
-        case 0x71:
+        case 0xB1:
             //todo from addrMod
             break;
     }
@@ -43,24 +46,38 @@ int cpu()
 }
 
 
-uint8_t readFromRam()
+u_char readMemory()
 {
-    return CpuRegister.PC
+    return code[CpuRegister.PC];
 }
 
 
-uint8_t immediate()
+u_char readRam(uint16_t addr)
 {
-    return
+    return 0;
 }
 
 
-uint8_t adc(uint8_t value, uint8_t cycles)
+uint16_t immediate()
 {
-    CpuRegister.A += value;
+    return code[CpuRegister.PC];
+}
+
+
+uint16_t absolute()
+{
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC]);
+    readRam(*ptrRam);
+    return 0;
+}
+
+
+uint8_t lda(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.A = value;
     return cycles;
 }
-#endif
+
 
 
 void cpuInfo()

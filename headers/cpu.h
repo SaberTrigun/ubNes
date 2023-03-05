@@ -3,6 +3,9 @@
 #ifndef __UB_CPU_H__
 #define __UB_CPU_H__
 
+using u_char = unsigned char;
+using u_int = unsigned int;
+
 namespace ub
 {
 
@@ -33,16 +36,17 @@ struct
 void cpuInfo();
 
 
-uint8_t readFromRam();
+u_char readMemory();
 void writeToRam();
 
+u_char readRam(uint16_t addr);
 
 int cpu();
 
 
-void immediate();
+uint16_t immediate();
 
-void absolute();
+uint16_t absolute();
 
 void zeropage();
 
@@ -67,6 +71,7 @@ void relative();
 
 uint8_t adc(uint8_t value, uint8_t cycles);
 
+uint8_t lda(uint8_t value, uint8_t cycles);
 
 
 }
