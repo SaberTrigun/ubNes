@@ -39,7 +39,7 @@ void cpuInfo();
 u_char readMemory();
 void writeToRam();
 
-u_char readRam(uint16_t addr);
+uint8_t readRam(uint16_t addr);
 
 int cpu();
 
@@ -48,7 +48,7 @@ uint16_t immediate();
 
 uint16_t absolute();
 
-void zeropage();
+uint16_t zeropage();
 
 void accumulator();
 
@@ -56,9 +56,9 @@ void absoluteX();
 
 void absoluteY();
 
-void zeropageX();
+uint16_t zeropageX();
 
-void zeropageY();
+uint16_t zeropageY();
 
 void indirect();
 

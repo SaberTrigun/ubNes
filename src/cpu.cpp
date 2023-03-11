@@ -4,7 +4,9 @@
 
 namespace ub
 {
-u_char code[5] = {0xA9, 0x07, 0xAD, 0x30, 0x10};
+u_char code[5] = {0xA5, 0x55};
+uint8_t ram[0xFFFF] = {0};
+
 
     // Мы получаем код операции из PC по нему вызываем нужную функцию с нужным режимом адресом
 int cpu()
@@ -19,10 +21,13 @@ int cpu()
             //++CpuRegister.PC;
             break;
         case 0xA5:
+            ++CpuRegister.PC;
+            lda(zeropage(), 2);
             //todo from addrMod
             break;
         case 0xB5:
-            //todo from addrMod
+            ++CpuRegister.PC;
+            lda(zeropageX(), 2);
             break;
         case 0xAD:
             ++CpuRegister.PC;
@@ -52,9 +57,10 @@ u_char readMemory()
 }
 
 
-u_char readRam(uint16_t addr)
+uint8_t readRam(uint16_t addr)
 {
-    return 0;
+    ram[0x0055] = 57;
+    return ram[addr];
 }
 
 
@@ -67,8 +73,22 @@ uint16_t immediate()
 uint16_t absolute()
 {
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC]);
-    readRam(*ptrRam);
-    return 0;
+    return readRam(*ptrRam);
+}
+
+
+uint16_t zeropage()
+{
+    uint8_t zeroAddr[2] = {code[CpuRegister.PC], 0x00};
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
+    return readRam(*ptrRam);
+
+}
+
+
+uint16_t zeropageX()
+{
+    return readRam(code[CpuRegister.PC] + CpuRegister.X);
 }
 
 
@@ -77,6 +97,15 @@ uint8_t lda(uint8_t value, uint8_t cycles)
     CpuRegister.A = value;
     return cycles;
 }
+
+
+
+
+
+
+
+
+
 
 
 
