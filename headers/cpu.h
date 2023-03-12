@@ -30,7 +30,7 @@ struct
             uint8_t N:1;
         } flags = {.C = 0, .Z = 0, .I = 0, .D = 0, .B = 1, .unused = 1, .V = 0, .N = 0};
     } P;            // register status
-} CpuRegister = {.PC = 0, .A = 0, .S = 0, .X = 0, .Y = 0};
+} CpuRegister = {.PC = 0, .A = 0, .S = 0, .X = 0x05, .Y = 0x06};
 
 
 void cpuInfo();
@@ -52,9 +52,9 @@ uint16_t zeropage();
 
 void accumulator();
 
-void absoluteX();
+uint16_t absoluteX();
 
-void absoluteY();
+uint16_t absoluteY();
 
 uint16_t zeropageX();
 
@@ -62,9 +62,9 @@ uint16_t zeropageY();
 
 void indirect();
 
-void indirectX();
+uint16_t indirectX();
 
-void indirectY();
+uint16_t indirectY();
 
 void relative();
 

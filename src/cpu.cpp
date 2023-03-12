@@ -4,7 +4,7 @@
 
 namespace ub
 {
-u_char code[5] = {0xA5, 0x55};
+u_char code[5] = {0xB1, 0x50};
 uint8_t ram[0xFFFF] = {0};
 
 
@@ -23,7 +23,6 @@ int cpu()
         case 0xA5:
             ++CpuRegister.PC;
             lda(zeropage(), 2);
-            //todo from addrMod
             break;
         case 0xB5:
             ++CpuRegister.PC;
@@ -34,15 +33,21 @@ int cpu()
             lda(absolute(), 2);
             break;
         case 0xBD:
-            //todo from addrMod
+            ++CpuRegister.PC;
+            lda(absoluteX(), 3);
             break;
         case 0xB9:
-            //todo from addrMod
+            ++CpuRegister.PC;
+            lda(absoluteY(), 3);
             break;
         case 0xA1:
+            ++CpuRegister.PC;
+            lda(indirectX(), 3);
             //todo from addrMod
             break;
         case 0xB1:
+            ++CpuRegister.PC;
+            lda(indirectY(), 3);
             //todo from addrMod
             break;
     }
@@ -59,7 +64,8 @@ u_char readMemory()
 
 uint8_t readRam(uint16_t addr)
 {
-    ram[0x0055] = 57;
+    ram[0x0050] = 0x0050;
+    ram[0x0056] = 37;
     return ram[addr];
 }
 
@@ -88,7 +94,38 @@ uint16_t zeropage()
 
 uint16_t zeropageX()
 {
-    return readRam(code[CpuRegister.PC] + CpuRegister.X);
+    uint8_t zeroAddr[2] = {code[CpuRegister.PC] + CpuRegister.X, 0x00};
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
+    return readRam(*ptrRam);
+}
+
+
+uint16_t absoluteX()
+{
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC + CpuRegister.X]);
+    return readRam(*ptrRam);
+}
+
+
+uint16_t absoluteY()
+{
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC + CpuRegister.Y]);
+    return readRam(*ptrRam);
+}
+
+
+uint16_t indirectX()
+{
+    uint8_t zeroAddr[2] = {code[CpuRegister.PC] + CpuRegister.X, 0x00};
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
+    return readRam(readRam(*ptrRam));
+}
+
+uint16_t indirectY()
+{
+    uint8_t zeroAddr[2] = {code[CpuRegister.PC], 0x00};
+    uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
+    return readRam(readRam(*ptrRam) + CpuRegister.Y);
 }
 
 
