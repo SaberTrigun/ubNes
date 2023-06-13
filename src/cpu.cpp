@@ -4,8 +4,9 @@
 
 namespace ub
 {
-u_char code[5] = {0xB1, 0x50};
-uint8_t ram[0xFFFF] = {0};
+unsigned int code[18] = {0xB1, 0x00};
+//u_char code[5] = {0xB1, 0x50};
+uint8_t ram[0x02] = {};
 
 
     // Мы получаем код операции из PC по нему вызываем нужную функцию с нужным режимом адресом
@@ -18,37 +19,77 @@ int cpu()
         case 0xA9:
             ++CpuRegister.PC;
             lda(immediate(), 2);
-            //++CpuRegister.PC;
+            ++CpuRegister.PC;
             break;
         case 0xA5:
             ++CpuRegister.PC;
             lda(zeropage(), 2);
+            ++CpuRegister.PC;
             break;
         case 0xB5:
             ++CpuRegister.PC;
             lda(zeropageX(), 2);
+            ++CpuRegister.PC;
             break;
         case 0xAD:
             ++CpuRegister.PC;
             lda(absolute(), 2);
+            ++CpuRegister.PC;
             break;
         case 0xBD:
             ++CpuRegister.PC;
             lda(absoluteX(), 3);
+            ++CpuRegister.PC;
             break;
         case 0xB9:
             ++CpuRegister.PC;
             lda(absoluteY(), 3);
+            ++CpuRegister.PC;
             break;
         case 0xA1:
             ++CpuRegister.PC;
-            lda(indirectX(), 3);
-            //todo from addrMod
+            lda(preIndexedIndirectZpX(), 3);
+            ++CpuRegister.PC;
             break;
         case 0xB1:
             ++CpuRegister.PC;
-            lda(indirectY(), 3);
-            //todo from addrMod
+            lda(postIndexedIndirectZpY(), 3);
+            ++CpuRegister.PC;
+            break;
+        case 0x85:
+            ++CpuRegister.PC;
+            sta(zeropage(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x95:
+            ++CpuRegister.PC;
+            //sta();
+            ++CpuRegister.PC;
+            break;
+        case 0x8D:
+            ++CpuRegister.PC;
+            //sta();
+            ++CpuRegister.PC;
+            break;
+        case 0x9D:
+            ++CpuRegister.PC;
+            //sta();
+            ++CpuRegister.PC;
+            break;
+        case 0x99:
+            ++CpuRegister.PC;
+            //sta();
+            ++CpuRegister.PC;
+            break;
+        case 0x81:
+            ++CpuRegister.PC;
+            //sta();
+            ++CpuRegister.PC;
+            break;
+        case 0x91:
+            ++CpuRegister.PC;
+            //sta();
+            ++CpuRegister.PC;
             break;
     }
 
@@ -64,8 +105,8 @@ u_char readMemory()
 
 uint8_t readRam(uint16_t addr)
 {
-    ram[0x0050] = 0x0050;
-    ram[0x0056] = 37;
+    for(int i = 0; i < 0xFF; ++i)
+        ram[i] = i; // Заполняем рам значениями для теста
     return ram[addr];
 }
 
@@ -79,7 +120,7 @@ uint16_t immediate()
 uint16_t absolute()
 {
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC]);
-    return readRam(*ptrRam);
+    return *ptrRam;
 }
 
 
@@ -87,7 +128,7 @@ uint16_t zeropage()
 {
     uint8_t zeroAddr[2] = {code[CpuRegister.PC], 0x00};
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
-    return readRam(*ptrRam);
+    return *ptrRam;
 
 }
 
@@ -96,45 +137,57 @@ uint16_t zeropageX()
 {
     uint8_t zeroAddr[2] = {code[CpuRegister.PC] + CpuRegister.X, 0x00};
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
-    return readRam(*ptrRam);
+    return *ptrRam;
+}
+
+
+uint16_t zeropageY()
+{
+
 }
 
 
 uint16_t absoluteX()
 {
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC + CpuRegister.X]);
-    return readRam(*ptrRam);
+    return *ptrRam;
 }
 
 
 uint16_t absoluteY()
 {
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&code[CpuRegister.PC + CpuRegister.Y]);
-    return readRam(*ptrRam);
+    return *ptrRam;
 }
 
 
-uint16_t indirectX()
+uint16_t preIndexedIndirectZpX()
 {
     uint8_t zeroAddr[2] = {code[CpuRegister.PC] + CpuRegister.X, 0x00};
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
     return readRam(readRam(*ptrRam));
 }
 
-uint16_t indirectY()
+uint16_t postIndexedIndirectZpY()
 {
     uint8_t zeroAddr[2] = {code[CpuRegister.PC], 0x00};
     uint16_t* ptrRam = reinterpret_cast<uint16_t*>(&zeroAddr);
-    return readRam(readRam(*ptrRam) + CpuRegister.Y);
+    return readRam(*ptrRam + CpuRegister.Y);
 }
 
 
 uint8_t lda(uint8_t value, uint8_t cycles)
 {
-    CpuRegister.A = value;
+    CpuRegister.A = readRam(value);
     return cycles;
 }
 
+
+uint8_t sta(uint8_t value, uint8_t cycles)
+{
+    ram[value] = CpuRegister.A;
+    return cycles;
+}
 
 
 

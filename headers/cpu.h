@@ -62,9 +62,9 @@ uint16_t zeropageY();
 
 void indirect();
 
-uint16_t indirectX();
+uint16_t preIndexedIndirectZpX();
 
-uint16_t indirectY();
+uint16_t postIndexedIndirectZpY();
 
 void relative();
 
@@ -72,6 +72,8 @@ void relative();
 uint8_t adc(uint8_t value, uint8_t cycles);
 
 uint8_t lda(uint8_t value, uint8_t cycles);
+
+uint8_t sta(uint8_t value, uint8_t cycles);
 
 
 }

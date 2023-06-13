@@ -8,6 +8,5 @@ int main(){
     ub::cpu();
 
     ub::cpuInfo();
-
     return 0;
 }
