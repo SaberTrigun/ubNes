@@ -56,6 +56,46 @@ int cpu()
             lda(postIndexedIndirectZpY(), 3);
             ++CpuRegister.PC;
             break;
+        case 0xA2:
+            ++CpuRegister.PC;
+            ldx(immediate(), 2);
+            ++CpuRegister.PC;
+        case 0xA6:
+            ++CpuRegister.PC;
+            ldx(zeropage(), 2);
+            ++CpuRegister.PC;
+        case 0xB6:
+            ++CpuRegister.PC;
+            ldx(postIndexedIndirectZpY(), 2);
+            ++CpuRegister.PC;
+        case 0xAE:
+            ++CpuRegister.PC;
+            ldx(absolute(), 3);
+            ++CpuRegister.PC;
+        case 0xBE:
+            ++CpuRegister.PC;
+            ldx(absoluteY(), 3);
+            ++CpuRegister.PC;
+        case 0xA0:
+            ++CpuRegister.PC;
+            ldy(immediate(), 2);
+            ++CpuRegister.PC;
+        case 0xA4:
+            ++CpuRegister.PC;
+            ldy(zeropage(), 2);
+            ++CpuRegister.PC;
+        case 0xB4:
+            ++CpuRegister.PC;
+            ldy(preIndexedIndirectZpX(), 2);
+            ++CpuRegister.PC;
+        case 0xAC:
+            ++CpuRegister.PC;
+            ldy(absolute(), 3);
+            ++CpuRegister.PC;
+        case 0xBC:
+            ++CpuRegister.PC;
+            ldy(absoluteX(), 3);
+            ++CpuRegister.PC;
         case 0x85:
             ++CpuRegister.PC;
             sta(zeropage(), 2);
@@ -63,32 +103,32 @@ int cpu()
             break;
         case 0x95:
             ++CpuRegister.PC;
-            //sta();
+            sta(zeropageX(), 2);
             ++CpuRegister.PC;
             break;
         case 0x8D:
             ++CpuRegister.PC;
-            //sta();
+            sta(absolute(), 3);
             ++CpuRegister.PC;
             break;
         case 0x9D:
             ++CpuRegister.PC;
-            //sta();
+            sta(absoluteX(), 3);
             ++CpuRegister.PC;
             break;
         case 0x99:
             ++CpuRegister.PC;
-            //sta();
+            sta(absoluteY(), 3);
             ++CpuRegister.PC;
             break;
         case 0x81:
             ++CpuRegister.PC;
-            //sta();
+            sta(preIndexedIndirectZpX(), 2);
             ++CpuRegister.PC;
             break;
         case 0x91:
             ++CpuRegister.PC;
-            //sta();
+            sta(postIndexedIndirectZpY(), 2);
             ++CpuRegister.PC;
             break;
     }
@@ -179,6 +219,20 @@ uint16_t postIndexedIndirectZpY()
 uint8_t lda(uint8_t value, uint8_t cycles)
 {
     CpuRegister.A = readRam(value);
+    return cycles;
+}
+
+
+uint8_t ldx(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.X = readRam(value);
+    return cycles;
+}
+
+
+uint8_t ldy(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.Y = readRam(value);
     return cycles;
 }
 

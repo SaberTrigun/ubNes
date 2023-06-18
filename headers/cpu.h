@@ -73,6 +73,10 @@ uint8_t adc(uint8_t value, uint8_t cycles);
 
 uint8_t lda(uint8_t value, uint8_t cycles);
 
+uint8_t ldx(uint8_t value, uint8_t cycles);
+
+uint8_t ldy(uint8_t value, uint8_t cycles);
+
 uint8_t sta(uint8_t value, uint8_t cycles);
 
 
