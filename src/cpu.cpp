@@ -131,6 +131,66 @@ int cpu()
             sta(postIndexedIndirectZpY(), 2);
             ++CpuRegister.PC;
             break;
+        case 0x86:
+            ++CpuRegister.PC;
+            stx(zeropage(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x96:
+            ++CpuRegister.PC;
+            stx(postIndexedIndirectZpY(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x8E:
+            ++CpuRegister.PC;
+            stx(absolute(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x8C:
+            ++CpuRegister.PC;
+            sty(absolute(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x94:
+            ++CpuRegister.PC;
+            sty(preIndexedIndirectZpX(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x84:
+            ++CpuRegister.PC;
+            sty(zeropage(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0xAA:
+            ++CpuRegister.PC;
+            tax(immediate(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0xA8:
+            ++CpuRegister.PC;
+            tay(immediate(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0xBA:
+            ++CpuRegister.PC;
+            tsx(immediate(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x8A:
+            ++CpuRegister.PC;
+            txa(immediate(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x9A:
+            ++CpuRegister.PC;
+            txs(immediate(), 2);
+            ++CpuRegister.PC;
+            break;
+        case 0x98:
+            ++CpuRegister.PC;
+            tya(immediate(), 2);
+            ++CpuRegister.PC;
+            break;
     }
 
     return result;
@@ -244,12 +304,70 @@ uint8_t sta(uint8_t value, uint8_t cycles)
 }
 
 
+uint8_t stx(uint8_t value, uint8_t cycles)
+{
+    ram[value] = CpuRegister.X;
+    return cycles;
+}
 
 
+uint8_t sty(uint8_t value, uint8_t cycles)
+{
+    ram[value] = CpuRegister.Y;
+    return cycles;
+}
 
 
+uint8_t tax(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.X = CpuRegister.A;
+    CpuRegister.P.flags.Z = 1;
+    CpuRegister.P.flags.N = 1;
+    return cycles;
+}
 
 
+uint8_t tay(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.Y = CpuRegister.A;
+    CpuRegister.P.flags.Z = 1;
+    CpuRegister.P.flags.N = 1;
+    return cycles;
+}
+
+
+uint8_t tsx(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.X = CpuRegister.S;
+    CpuRegister.P.flags.Z = 1;
+    CpuRegister.P.flags.N = 1;
+    return cycles;
+}
+
+
+uint8_t txa(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.A = CpuRegister.X;
+    CpuRegister.P.flags.Z = 1;
+    CpuRegister.P.flags.N = 1;
+    return cycles;
+}
+
+
+uint8_t txs(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.S = CpuRegister.X;
+    return cycles;
+}
+
+
+uint8_t tya(uint8_t value, uint8_t cycles)
+{
+    CpuRegister.A = CpuRegister.Y;
+    CpuRegister.P.flags.Z = 1;
+    CpuRegister.P.flags.N = 1;
+    return cycles;
+}
 
 
 

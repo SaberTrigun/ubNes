@@ -79,6 +79,23 @@ uint8_t ldy(uint8_t value, uint8_t cycles);
 
 uint8_t sta(uint8_t value, uint8_t cycles);
 
+uint8_t stx(uint8_t value, uint8_t cycles);
+
+uint8_t sty(uint8_t value, uint8_t cycles);
+
+uint8_t tax(uint8_t value, uint8_t cycles);
+
+uint8_t tay(uint8_t value, uint8_t cycles);
+
+uint8_t tsx(uint8_t value, uint8_t cycles);
+
+uint8_t txa(uint8_t value, uint8_t cycles);
+
+uint8_t txs(uint8_t value, uint8_t cycles);
+
+uint8_t tya(uint8_t value, uint8_t cycles);
+
+
 
 }
 #endif //__UB_CPU_H__
